@@ -10,14 +10,14 @@ packages:
   - mongodb
   - git
 users:
-  - name: koreni
-    gecos: Admin User
-    shell: /bin/bash
-    groups: users,admin
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    lock_passwd: true
-    ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWf3NUzLCCVyXujbAm6yST62TcuM8wZ4OzN7/RiD9OW koreni@MacBook-Air.local
+- name: koreni
+  gecos: Admin User
+  shell: /bin/bash
+  groups: users,admin
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  lock_passwd: true
+  ssh_authorized_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWf3NUzLCCVyXujbAm6yST62TcuM8wZ4OzN7/RiD9OW koreni@MacBook-Air.local
 runcmd:
   - cd /home/koreni/
   - git clone -b monolith https://github.com/express42/reddit.git
