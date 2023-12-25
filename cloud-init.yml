@@ -1,4 +1,5 @@
 #cloud-config
+#command for init
 ssh_authorized_keys:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWf3NUzLCCVyXujbAm6yST62TcuM8wZ4OzN7/RiD9OW koreni@MacBook-Air.local
 package_update: true

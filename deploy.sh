@@ -1,4 +1,5 @@
 #!/bin/bash
+#deploy app
 sudo apt update
 sudo apt install git -y
 cd ~/
