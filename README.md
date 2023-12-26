@@ -19,3 +19,17 @@ koreni2000 Infra repository
 OpenVPN:
     bastion_IP = 51.250.76.167
     someinternalhost_IP = 10.128.0.21
+
+APP:
+    testapp_IP = 62.84.115.89
+    testapp_port = 9292
+
+cloud-init:
+    yc compute instance create \
+        --name reddit-app-1 \
+        --hostname reddit-app-1 \
+        --memory=4 \
+        --create-boot-disk image-folder-id=standard-images,image-family=ubuntu-1604-lts,size=10GB \
+        --network-interface subnet-name=default-ru-central1-a,nat-ip-version=ipv4 \
+        --metadata-from-file user-data=/Users/koreni/DevOps/OTUS/l004/koreni2000_infra/cloud-init.yml \
+        --metadata serial-port-enable=1
