@@ -33,3 +33,7 @@ cloud-init:
         --network-interface subnet-name=default-ru-central1-a,nat-ip-version=ipv4 \
         --metadata-from-file user-data=/Users/koreni/DevOps/OTUS/l004/koreni2000_infra/cloud-init.yml \
         --metadata serial-port-enable=1
+
+packer-base:
+  Добавлен bake-образ, файлы с переменными и используется параметризация для packer. В папке files добавлены скрипты для создания systemd unit и билда приложения.
+  В папке config-scripts добавлены файлы для создания ВМ и файл cloud-init-create-reddit.yml в котором передаются данные пользователя на ВМ машину.
