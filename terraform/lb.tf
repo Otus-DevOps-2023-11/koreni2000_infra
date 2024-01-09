@@ -1,12 +1,19 @@
 resource "yandex_lb_target_group" "reddit-app"{
   name      = "reddit-app"
-  target {
-    subnet_id = var.subnet_id
-    address   = yandex_compute_instance.app[0].network_interface.0.ip_address
-  }
-  target {
-    subnet_id = var.subnet_id
-    address   = yandex_compute_instance.app[1].network_interface.0.ip_address
+  # target {
+  #   subnet_id = var.subnet_id
+  #   address   = yandex_compute_instance.app[0].network_interface.0.ip_address
+  # }
+  # target {
+  #   subnet_id = var.subnet_id
+  #   address   = yandex_compute_instance.app[1].network_interface.0.ip_address
+  # }
+  dynamic "target" {
+    for_each = yandex_compute_instance.app
+    content {
+      subnet_id = var.subnet_id
+      address   = target.value.network_interface.0.ip_address
+    }
   }
 }
 
