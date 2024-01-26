@@ -1,7 +1,18 @@
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+      # version = "0.104.0"
+    }
+  }
+}
 
 resource "yandex_compute_instance" "app" {
 #   count = 1
-  name = "reddit-app"
+  name = "reddit-app-${var.env}"
+  labels = {
+    tags = "reddit-app-${var.env}"
+  }
   resources {
     cores  = 2
     memory = 2
@@ -14,7 +25,7 @@ resource "yandex_compute_instance" "app" {
   }
   network_interface {
     # Указан id подсети default-ru-central1-a
-    subnet_id = yandex_vpc_subnet.app-subnet.id
+    subnet_id = var.subnet_id
     nat = true
   }
   metadata = {
@@ -29,10 +40,21 @@ resource "yandex_compute_instance" "app" {
     private_key = file(var.private_key_path)
   }
   provisioner "file" {
-    source      = "files/puma.service"
+    source      = "../modules/app/files/puma.service"
     destination = "/tmp/puma.service"
   }
+  provisioner "file" {
+    source      = "../modules/app/files/deploy.sh"
+    destination = "/tmp/deploy.sh"
+  }
   provisioner "remote-exec" {
-    script = "files/deploy.sh"
+    inline = [
+        "#!/bin/bash",
+        "cd /tmp/",
+        "touch /tmp/db_server",
+        "echo 'DATABASE_URL=${var.database_url}' >> /tmp/db_server",
+        "sudo chmod +x deploy.sh",
+        "sudo ./deploy.sh"
+    ]
   }
 }
