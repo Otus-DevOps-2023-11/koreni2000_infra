@@ -1,0 +1,14 @@
+[Unit]
+Description=Puma HTTP Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/reddit/
+EnvironmentFile=/tmp/db_server
+ExecStart=/bin/bash -lc "DATABASE_URL=${DATABASE_URL}:27017 puma"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

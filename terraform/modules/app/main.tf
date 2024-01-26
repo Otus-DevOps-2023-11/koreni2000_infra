@@ -1,23 +1,18 @@
-# terraform {
-#   required_version = ">= 0.13"
-#   required_providers {
-#     yandex = {
-#       source = "yandex-cloud/yandex"
-#       version = "0.104.0"
-#     }
-#   }
-# }
-
-provider "yandex" {
-  token     = var.token
-  cloud_id  = var.cloud_id
-  folder_id = var.folder_id
-  zone      = var.zone
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+      # version = "0.104.0"
+    }
+  }
 }
 
 resource "yandex_compute_instance" "app" {
-  count = 2
-  name = "reddit-app-${count.index + 1}"
+#   count = 1
+  name = "reddit-app-${var.env}"
+  labels = {
+    tags = "reddit-app-${var.env}"
+  }
   resources {
     cores  = 2
     memory = 2
@@ -25,13 +20,13 @@ resource "yandex_compute_instance" "app" {
   boot_disk {
     initialize_params {
       # Указать id образа созданного в предыдущем домашнем задании
-      image_id = var.image_id
+      image_id = var.app_disk_image
     }
   }
   network_interface {
     # Указан id подсети default-ru-central1-a
     subnet_id = var.subnet_id
-    nat       = true
+    nat = true
   }
   metadata = {
     ssh-keys = "ubuntu:${file(var.public_key_path)}"
@@ -45,10 +40,21 @@ resource "yandex_compute_instance" "app" {
     private_key = file(var.private_key_path)
   }
   provisioner "file" {
-    source      = "files/puma.service"
+    source      = "../modules/app/files/puma.service"
     destination = "/tmp/puma.service"
   }
+  provisioner "file" {
+    source      = "../modules/app/files/deploy.sh"
+    destination = "/tmp/deploy.sh"
+  }
   provisioner "remote-exec" {
-    script = "files/deploy.sh"
+    inline = [
+        "#!/bin/bash",
+        "cd /tmp/",
+        "touch /tmp/db_server",
+        "echo 'DATABASE_URL=${var.database_url}' >> /tmp/db_server",
+        "sudo chmod +x deploy.sh",
+        "sudo ./deploy.sh"
+    ]
   }
 }
