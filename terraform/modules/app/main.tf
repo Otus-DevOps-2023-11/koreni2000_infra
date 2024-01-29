@@ -54,7 +54,7 @@ resource "yandex_compute_instance" "app" {
         "touch /tmp/db_server",
         "echo 'DATABASE_URL=${var.database_url}' >> /tmp/db_server",
         "sudo chmod +x deploy.sh",
-        "sudo ./deploy.sh"
+        "./deploy.sh"
     ]
   }
 }
