@@ -1,11 +1,11 @@
-terraform {
-  required_providers {
-    yandex = {
-      source = "yandex-cloud/yandex"
-      # version = "0.104.0"
-    }
-  }
-}
+# terraform {
+#   required_providers {
+#     yandex = {
+#       source = "yandex-cloud/yandex"
+#       # version = "0.104.0"
+#     }
+#   }
+# }
 
 provider "yandex" {
   token     = var.token
@@ -28,7 +28,7 @@ module "db" {
 module "app" {
   source           = "../modules/app"
   env              = var.env
-  depends_on       = [module.db]
+  # depends_on       = [module.db]
   private_key_path = var.private_key_path
   public_key_path  = var.public_key_path
   app_disk_image   = var.app_disk_image
