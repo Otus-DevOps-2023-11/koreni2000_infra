@@ -1,13 +1,13 @@
 ---
 - name: Install Ruby and bundler
-  hosts: app
+  hosts: all
   become: True
+  become_user: root
   tasks:
-  - name: Install Ruby
+  - name: Install Ruby all
     apt:
-      name: {{ item }}
-      status: present
-    with_items:
-    - ruby-full
-    - ruby-bundler
-    - build-essential
+      name:
+      - ruby-full
+      - ruby-bundler
+      - build-essential
+      state: present
