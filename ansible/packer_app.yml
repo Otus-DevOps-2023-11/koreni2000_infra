@@ -1,5 +1,5 @@
 ---
-- name: Install Ruby and bundler
+- name: Install Ruby and bundler and git
   hosts: all
   become: True
   become_user: root
@@ -10,4 +10,9 @@
       - ruby-full
       - ruby-bundler
       - build-essential
+      state: present
+
+  - name: install Git
+    apt:
+      name: git
       state: present

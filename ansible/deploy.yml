@@ -3,18 +3,23 @@
   hosts: app
   become: True
   tasks:
-    - name: Fetch the latest version of application code
-      git:
-        repo: 'https://github.com/express42/reddit.git'
-        dest: /home/ubuntu/reddit
-        version: monolith # <-- Указываем нужную ветку
-      notify: reload puma
+  # - name: Install git
+  #   apt:
+  #     name: git
+  #     state: present
 
-    - name: bundle install
-      shell:
-        cmd: bundle install
-        chdir: /home/ubuntu/reddit/
-      notify: reload puma
+  - name: Fetch the latest version of application code
+    git:
+      repo: 'https://github.com/express42/reddit.git'
+      dest: /home/ubuntu/reddit
+      version: monolith # <-- Указываем нужную ветку
+    notify: reload puma
+
+  - name: bundle install
+    shell:
+      cmd: bundle install
+      chdir: /home/ubuntu/reddit/
+    notify: reload puma
 
   handlers:
   - name: reload puma
