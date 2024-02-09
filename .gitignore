@@ -13,5 +13,4 @@ variables.json
 .cache
 .pytest_cache
 
-jdauphant.nginx
 vault.key
