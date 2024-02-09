@@ -3,10 +3,6 @@
   hosts: app
   become: True
   tasks:
-  # - name: Install git
-  #   apt:
-  #     name: git
-  #     state: present
 
   - name: Fetch the latest version of application code
     git:
