@@ -1,27 +1,44 @@
+### Vagrant VirtaulBox
 Vagrant.configure("2") do |config|
-    config.vm.box = "bytesguy/ubuntu-server-20.04-arm64"
-    config.vm.box_version = "1.0.0"
-    # config.vm.network "private_network", type: "dhcp"
-    config.vm.provider :vmware_desktop do |v|
-        v.gui = true
-        # v.allowlist_verified = true
-        # v.whitelist_verified = true
-        # v.vmx["ethernet0.pcislotnumber"] = "33"
-        v.memory = 512
-        v.vmx["ethernet0.virtualdev"] = "vmxnet3"
+
+    # config.vm.network "public_network", bridge: "en0"
+
+    config.vm.provider "parallels" do |v|
+      # v.gui = true
+      v.memory = 512
+
     end
 
-#     config.vm.define "dbserver" do |db|
-#     #     db.vm.box = "ubuntu/xenial64"
-#         db.vm.box = "bytesguy/ubuntu-server-20.04-arm64"
-#         db.vm.hostname = "dbserver"
-#         db.vm.network :private_network, ip: "10.10.10.10"
-#     end
+    config.vm.define "dbserver" do |db|
+      db.vm.box = "bento/ubuntu-20.04-arm64"
+      db.vm.hostname = "dbserver"
+      db.vm.network :private_network, ip: "10.10.10.10"
 
-#     config.vm.define "appserver" do |app|
-#         # app.vm.box = "ubuntu/xenial64"
-#         app.vm.box = "bytesguy/ubuntu-server-20.04-arm64"
-#         app.vm.hostname = "appserver"
-#         app.vm.network :private_network, ip: "10.10.10.20"
-#     end
+      db.vm.provision "ansible" do |ansible|
+        ansible.compatibility_mode = "2.0"
+        ansible.playbook = "playbooks/site.yml"
+        ansible.groups = {
+        "db" => ["dbserver"],
+        "db:vars" => {"mongo_bind_ip" => "0.0.0.0"}
+        }
+      end
+    end
+
+    config.vm.define "appserver" do |app|
+      app.vm.box = "bento/ubuntu-20.04-arm64"
+      app.vm.hostname = "appserver"
+      app.vm.network :private_network, ip: "10.10.10.20"
+
+      app.vm.provision "ansible" do |ansible|
+        ansible.compatibility_mode = "2.0"
+        ansible.playbook = "playbooks/site.yml"
+        ansible.groups = {
+          "app" => ["appserver"],
+          "app:vars" => { "db_host" => "10.10.10.10"}
+        }
+        ansible.extra_vars = {
+            "deploy_user" => "root"
+        }
+      end
+    end
   end

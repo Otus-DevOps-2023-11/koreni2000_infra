@@ -1,0 +1,8 @@
+---
+- name: Install Ruby all
+  apt:
+    name:
+    - ruby-full
+    - ruby-bundler
+    - build-essential
+    state: present
