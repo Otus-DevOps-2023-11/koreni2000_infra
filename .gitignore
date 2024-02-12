@@ -13,7 +13,7 @@ variables.json
 .cache
 .pytest_cache
 
-jdauphant.nginx
+#jdauphant.nginx
 vault.key
 
 venv
