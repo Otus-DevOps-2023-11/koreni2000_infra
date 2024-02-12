@@ -6,3 +6,4 @@
     - ruby-bundler
     - build-essential
     state: present
+    update_cache: True

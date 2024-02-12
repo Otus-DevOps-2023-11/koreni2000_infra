@@ -15,3 +15,5 @@ variables.json
 
 jdauphant.nginx
 vault.key
+
+venv

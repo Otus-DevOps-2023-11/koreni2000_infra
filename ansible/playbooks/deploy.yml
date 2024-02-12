@@ -11,10 +11,20 @@
       version: monolith # <-- Указываем нужную ветку
     notify: reload puma
 
-  - name: Bundler install
-    bundler:
-      state: present
-      chdir: "/home/{{ deploy_user }}/reddit"
+  # - name: Bundler install
+  #   bundler:
+  #     state: present
+  #     chdir: "/home/{{ deploy_user }}/reddit"
+  #   notify: reload puma
+  - name: Intsall gem install bundler:1.16.1
+    shell:
+      cmd: gem install bundler:1.16.1
+      chdir: /home/{{ deploy_user }}/reddit/
+
+  - name: bundle install
+    shell:
+      cmd: bundle install
+      chdir: /home/{{ deploy_user }}/reddit/
     notify: reload puma
 
   handlers:
